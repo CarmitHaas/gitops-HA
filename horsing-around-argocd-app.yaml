@@ -12,13 +12,13 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: horsing-around-umbrella/horsing-around-app
+    path: horsing-around-umbrella/
     repoURL: git@github.com:CarmitHaas/gitops-HA.git
     targetRevision: HEAD
     helm:
       valueFiles:
         - values.yaml
-        - ../../app-values.yaml
+        - ../app-values.yaml
   syncPolicy:
     automated:
       prune: true
