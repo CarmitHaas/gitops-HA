@@ -14,15 +14,14 @@ horsing-around:
     annotations:
       kubernetes.io/ingress.class: nginx
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    host:   # Define the host here
+    host: "carmit-crm.zapto.org"
     paths:
       - path: /
         pathType: Prefix
     tls:
-    - hosts:
-        - #your host here
-      secretName: #your secretName here
-
+      - hosts:
+          - "carmit-crm.zapto.org"
+        secretName: carmit-crm-tls-xsb92
   resources:
     requests:
       cpu: 100m
@@ -42,46 +41,3 @@ mongodb:
     userPasswordKey: mongodb-passwords
   architecture: replicaset
   replicaCount: 3
-# horsing-around:
-#   replicaCount: 3
-#   image:
-#     repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
-#     tag: latest
-#     pullPolicy: IfNotPresent
-#   service:
-#     type: ClusterIP
-#     port: 80
-#     targetPort: 5000
-#   ingress:
-#     enabled: true
-#     className: nginx
-#     annotations:
-#       cert-manager.io/cluster-issuer: "letsencrypt-prod"
-#     hosts:
-#       - host: carmit-crm.zapto.org
-#         paths:
-#           - path: /app
-#             pathType: Prefix
-#     tls:
-#       - hosts:
-#           - carmit-crm.zapto.org
-#         secretName: carmit-crm-tls-xsb92
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 128Mi
-#     limits:
-#       cpu: 500m
-#       memory: 512Mi
-#   configMap:
-#     logLevel: info
-#     persistence: "true"
-
-# mongodb:
-#   auth:
-#     existingSecret: mongodb-secret
-#     rootPasswordKey: mongodb-root-password
-#     replicaSetKey: mongodb-replica-set-key
-#     userPasswordKey: mongodb-passwords
-#   architecture: replicaset
-#   replicaCount: 3
