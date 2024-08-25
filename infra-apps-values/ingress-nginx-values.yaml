@@ -1,0 +1,14 @@
+controller:
+  metrics:
+    enabled: true
+  extraArgs:
+    enable-ssl-passthrough: "true"
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: true
+  ingressClass: nginx
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi

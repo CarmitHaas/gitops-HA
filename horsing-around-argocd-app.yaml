@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: horsing-around
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio:~v1.0
+    argocd-image-updater.argoproj.io/horsing-around-app.update-strategy: semver
+spec:
+  destination:
+    namespace: horsing-around
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: horsing-around-umbrella
+    repoURL: git@github.com:CarmitHaas/gitops-HA.git
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+        - app-values.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  ignoreDifferences:
+    - group: bitnami.com
+      kind: SealedSecret
+      jsonPointers:
+        - /spec/encryptedData
+    - group: ""
+      kind: Secret
+      jsonPointers:
+        - /data
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: horsing-around-secrets
+  namespace: argocd
+spec:
+  destination:
+    namespace: horsing-around
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: .
+    repoURL: git@github.com:CarmitHaas/gitops-HA.git
+    targetRevision: HEAD
+    directory:
+      include: sealed-mongodb-secret.yaml
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

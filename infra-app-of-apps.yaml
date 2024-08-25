@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: infra-apps
-    repoURL: git@github.com:CarmitHaas/charts.git
+    repoURL: git@github.com:CarmitHaas/gitops-HA.git
     targetRevision: HEAD
     directory:
       recurse: true
