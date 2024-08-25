@@ -1,4 +1,4 @@
-horsing-around:
+horsing-around-app:
   enabled: true
   image:
     repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "horsing-around.fullname" . }}
+  name: {{ include "horsing-around-app.fullname" . }}
   labels:
-    {{- include "horsing-around.labels" . | nindent 4 }}
+    {{- include "horsing-around-app.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: {{ .Values.service.targetPort }}
   selector:
-    {{- include "horsing-around.selectorLabels" . | nindent 4 }}
+    {{- include "horsing-around-app.selectorLabels" . | nindent 4 }}

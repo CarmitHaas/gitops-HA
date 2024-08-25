@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "horsing-around.fullname" . }}
+  name: {{ include "horsing-around-app.fullname" . }}
   labels:
-    {{- include "horsing-around.labels" . | nindent 4 }}
+    {{- include "horsing-around-app.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "horsing-around.selectorLabels" . | nindent 6 }}
+      {{- include "horsing-around-app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "horsing-around.selectorLabels" . | nindent 8 }}
+        {{- include "horsing-around-app.selectorLabels" . | nindent 8 }}
     spec:
       containers:
       - name: {{ .Chart.Name }}
