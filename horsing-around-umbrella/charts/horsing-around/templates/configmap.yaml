@@ -5,4 +5,5 @@ metadata:
   labels:
     {{- include "horsing-around.labels" . | nindent 4 }}
 data:
-  SECRET_KEY: {{ .Values.config.SECRET_KEY }}
+  LOG_LEVEL: {{ .Values.configMap.logLevel | quote }}
+  PERSISTENCE: {{ .Values.configMap.persistence | quote }}

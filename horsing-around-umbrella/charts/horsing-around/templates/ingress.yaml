@@ -2,16 +2,15 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "horsing-around-app.fullname" . }}
+  name: {{ include "horsing-around.fullname" . }}
   labels:
-    {{- include "horsing-around-app.labels" . | nindent 4 }}
+    {{- include "horsing-around.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
-  {{- if .Values.ingress.tls }}
   tls:
     {{- range .Values.ingress.tls }}
     - hosts:
@@ -20,7 +19,6 @@ spec:
         {{- end }}
       secretName: {{ .secretName }}
     {{- end }}
-  {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
@@ -31,7 +29,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "horsing-around-app.fullname" $ }}
+                name: {{ include "horsing-around.fullname" $ }}
                 port: 
                   number: {{ $.Values.service.port }}
           {{- end }}
