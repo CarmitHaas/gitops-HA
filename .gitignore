@@ -1,0 +1,68 @@
+# Kubernetes secrets
+*secret.yaml
+!sealed-*secret.yaml
+
+# Helm chart dependencies
+**/charts/*.tgz
+
+# Helm package files
+*.tgz
+
+# Helm chart .lock files
+Chart.lock
+
+# Local values files that might contain sensitive information
+**/values-*.yaml
+!**/values.yaml
+!**/app-values.yaml
+
+# Python virtual environment
+venv/
+*.pyc
+__pycache__/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Ignore all .tfvars files, which are likely to contain sensitive data, such as
+# password, private keys, and other secrets. These should not be part of version 
+# control as they are data points which are potentially sensitive and subject 
+# to change depending on the environment.
+*.tfvars
+*.tfvars.json
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc

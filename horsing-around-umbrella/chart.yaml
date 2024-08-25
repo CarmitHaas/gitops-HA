@@ -1,0 +1,14 @@
+apiVersion: v2
+name: horsing-around-umbrella
+description: An umbrella Helm chart for Horsing Around application and its database
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: horsing-around-app
+    version: 0.1.0
+    condition: horsing-around-app.enabled
+  - name: mongodb
+    version: 13.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: mongodb.enabled

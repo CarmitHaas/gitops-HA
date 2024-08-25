@@ -1,0 +1,20 @@
+ingress:
+  hosts:
+    - host: carmit-crm.zapto.org
+      paths:
+        - path: /
+          pathType: Prefix
+      
+  tls:
+    - hosts:
+        - carmit-crm.zapto.org
+      secretName: carmit-crm-tls-xsb92
+
+mongodb:
+  auth:
+     existingSecret: mongodb-secret
+     rootPasswordKey: mongodb-root-password
+     replicaSetKey: mongodb-replica-set-key
+     userPasswordKey: mongodb-passwords
+
+
