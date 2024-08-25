@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio:~v1.0
-    argocd-image-updater.argoproj.io/horsing-around-app.update-strategy: semver
+    argocd-image-updater.argoproj.io/horsing-around.update-strategy: semver
 spec:
   destination:
     namespace: horsing-around
