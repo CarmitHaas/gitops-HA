@@ -19,6 +19,7 @@ horsing-around:
     tag: latest
 
 mongodb:
+  enabled: true
   auth:
     existingSecret: mongodb-secret
     rootPasswordKey: mongodb-root-password
@@ -26,3 +27,7 @@ mongodb:
     userPasswordKey: mongodb-passwords
   architecture: replicaset
   replicaCount: 3
+  persistence:
+    enabled: true
+    storageClass: "gp2"
+    size: 8Gi
