@@ -15,23 +15,34 @@ spec:
         {{- include "horsing-around.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - containerPort: {{ .Values.service.targetPort }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          envFrom:
-            - configMapRef:
-                name: {{ include "horsing-around.fullname" . }}-config
-            - secretRef:
-                name: {{ .Values.mongodb.auth.existingSecret }}
-            - secretRef:
-                name: {{ include "horsing-around.fullname" . }}-app-secret
-          env:
-            - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "horsing-around.fullname" . }}-app-secret
-                  key: mongodb-uri
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: MONGODB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "horsing-around.fullname" . }}-secret
+                key: mongodb-root-password
+          - name: MONGODB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "horsing-around.fullname" . }}-secret
+                key: mongodb-username
+          - name: MONGODB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "horsing-around.fullname" . }}-secret
+                key: mongodb-database
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "horsing-around.fullname" . }}-secret
+                key: mongodb-uri
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "horsing-around.fullname" . }}-config
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
