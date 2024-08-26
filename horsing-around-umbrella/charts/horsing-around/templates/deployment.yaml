@@ -25,7 +25,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "horsing-around.fullname" . }}-config
-             - secretRef:
+            - secretRef:
                 name: mongodb-secret
             - secretRef:
                 name: {{ include "horsing-around.fullname" . }}-app-secret
