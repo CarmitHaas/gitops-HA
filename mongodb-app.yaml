@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mongodb
+  namespace: argocd
+spec:
+  destination:
+    namespace: horsing-around
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    chart: mongodb
+    repoURL: https://charts.bitnami.com/bitnami
+    targetRevision: 13.6.0
+    helm:
+      values: |
+        auth:
+          existingSecret: mongodb-secret
+          rootPasswordKey: mongodb-root-password
+          replicaSetKey: mongodb-replica-set-key
+          passwordsKey: mongodb-passwords
+        ingress:
+          enabled: false
+        architecture: replicaset
+        replicaCount: 3
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

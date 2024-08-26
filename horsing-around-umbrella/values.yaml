@@ -7,7 +7,7 @@ horsing-around:
     hosts:
       - host: carmit-crm.zapto.org
         paths:
-          - path: /app
+          - path: /
             pathType: Prefix
     tls:
       - hosts:
@@ -20,6 +20,8 @@ horsing-around:
 
 mongodb:
   enabled: true
+  ingress:
+    enabled: false
   auth:
     existingSecret: mongodb-secret
     rootPasswordKey: mongodb-root-password
