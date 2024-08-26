@@ -18,7 +18,7 @@ ingress:
   hosts:
     - host: carmit-crm.zapto.org
       paths:
-        - path: /app
+        - path: /
           pathType: Prefix
   tls:
     - hosts:
