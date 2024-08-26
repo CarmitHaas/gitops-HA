@@ -7,7 +7,7 @@ horsing-around:
     hosts:
       - host: carmit-crm.zapto.org
         paths:
-          - path: /
+          - path: /app
             pathType: Prefix
     tls:
       - hosts:
