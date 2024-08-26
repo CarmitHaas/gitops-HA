@@ -1,4 +1,3 @@
-# Horsing Around specific values
 replicaCount: 3
 
 image:
@@ -17,14 +16,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   hosts:
-    - host: #your host here
+    - host: carmit-crm.zapto.org
       paths:
         - path: /
           pathType: Prefix
   tls:
     - hosts:
-        - #your host here
-      secretName: #your secretName here
+        - carmit-crm.zapto.org
+      secretName: carmit-crm-tls-xsb92
 
 resources:
   requests:
@@ -38,11 +37,11 @@ configMap:
   logLevel: info
   persistence: "true"
 
-# MongoDB specific values
 mongodb:
   auth:
-    rootPassword: #your password here
-    username: root
-    database: admin
+    existingSecret: mongodb-secret
+    rootPasswordKey: mongodb-root-password
+    replicaSetKey: mongodb-replica-set-key
+    userPasswordKey: mongodb-passwords
   architecture: replicaset
   replicaCount: 3
