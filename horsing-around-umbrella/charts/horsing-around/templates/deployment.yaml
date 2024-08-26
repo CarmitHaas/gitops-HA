@@ -25,3 +25,13 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "horsing-around.fullname" . }}-config
+            - secretRef:
+                name: {{ .Values.mongodb.auth.existingSecret }}
+            - secretRef:
+                name: {{ include "horsing-around.fullname" . }}-app-secret
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "horsing-around.fullname" . }}-app-secret
+                  key: mongodb-uri
