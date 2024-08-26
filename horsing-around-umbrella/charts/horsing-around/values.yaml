@@ -42,6 +42,6 @@ mongodb:
     existingSecret: mongodb-secret
     rootPasswordKey: mongodb-root-password
     replicaSetKey: mongodb-replica-set-key
-    userPasswordKey: mongodb-passwords
+    passwordsKey: mongodb-passwords
   architecture: replicaset
   replicaCount: 3

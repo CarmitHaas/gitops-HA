@@ -27,8 +27,6 @@ spec:
                 name: {{ include "horsing-around.fullname" . }}-config
             - secretRef:
                 name: mongodb-secret
-            - secretRef:
-                name: {{ include "horsing-around.fullname" . }}-app-secret
           env:
             - name: MONGODB_URI
               valueFrom:
