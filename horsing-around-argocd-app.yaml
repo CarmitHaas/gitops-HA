@@ -5,14 +5,13 @@ metadata:
   namespace: argocd
   annotations:
     argocd-image-updater.argoproj.io/image-list: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio:~v1.0
-    argocd-image-updater.argoproj.io/horsing-around.update-strategy: semver
 spec:
   destination:
     namespace: horsing-around
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: horsing-around-umbrella/
+    path: horsing-around-umbrella
     repoURL: git@github.com:CarmitHaas/gitops-HA.git
     targetRevision: HEAD
     helm:
