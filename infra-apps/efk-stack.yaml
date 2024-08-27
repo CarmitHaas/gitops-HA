@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'git@github.com:CarmitHaas/gitops-HA.git'
     targetRevision: HEAD
-    path: logging
+    path: infra-apps/logging
     helm:
       valueFiles:
         - values.yaml
