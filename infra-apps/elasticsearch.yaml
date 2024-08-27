@@ -11,23 +11,31 @@ spec:
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    targetRevision: 8.5.1
+    targetRevision: 7.17.3  # Using a 7.x version
     helm:
-      valuesObject:
-        secret:
-          password: "elastic"
-        replicas: 2  
+      values: |
+        clusterName: "elasticsearch"
+        nodeGroup: "master"
+        esConfig:
+          elasticsearch.yml: |
+            xpack.security.enabled: false
+            xpack.security.transport.ssl.enabled: false
+            xpack.security.http.ssl.enabled: false
+            discovery.type: single-node
+        antiAffinity: "soft"
         resources:
-          requests:
-            cpu: "100m"
-            memory: "1Gi"
+          requests: 
+            cpu: 100m
+            memory: 512M
           limits:
-            cpu: "1000m"
-            memory: "2Gi"
-          volumeClaimTemplate:
-            resources:
-              requests:
-                storage: 3Gi
+            cpu: 1000m
+            memory: 2Gi
+        volumeClaimTemplate:
+          accessModes: [ "ReadWriteOnce" ]
+          resources:
+            requests:
+              storage: 5Gi
+        protocol: http
   syncPolicy:
     automated:
       prune: true

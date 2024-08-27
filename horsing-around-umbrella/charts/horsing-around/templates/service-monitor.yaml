@@ -9,4 +9,6 @@ spec:
     matchLabels:
       {{ toYaml .Values.app.labels | indent 4  }}
   endpoints:
-  - port: web
+  - port: 80-5000  
+    targetPort: 5000
+    path: /metrics
