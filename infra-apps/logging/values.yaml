@@ -1,29 +1,26 @@
 # Elasticsearch values
 elasticsearch:
-  replicas: 1  # Reduced from 2 to 1
+  replicas: 1  
   minimumMasterNodes: 1
   persistence:
     enabled: true
     labels:
       enabled: true
   
-  # Add resource limits and requests
   resources:
     requests:
-      cpu: "100m"  # Request 0.1 CPU cores
-      memory: "512Mi"  # Request 512MB of memory
+      cpu: "100m" 
+      memory: "512Mi"  
     limits:
-      cpu: "500m"  # Limit to 0.5 CPU cores
-      memory: "1Gi"  # Limit to 1GB of memory
+      cpu: "500m"  
+      memory: "1Gi"  
 
-  # Adjust Java heap size
   esJavaOpts: "-Xmx512m -Xms512m"
 
-  # Disable features you might not need
   xpack.security.enabled: false
   xpack.monitoring.enabled: false
 
-  # Configure smaller disk size if needed
+  
   volumeClaimTemplate:
     accessModes: [ "ReadWriteOnce" ]
     resources:
@@ -50,6 +47,13 @@ fluent-bit:
   flush: 1
   metricsPort: 2020 
   logLevel: info
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
   
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
   config:
