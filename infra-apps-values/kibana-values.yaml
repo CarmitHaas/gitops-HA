@@ -1,28 +1,5 @@
-elasticsearchHosts: "http://elasticsearch-master:9200"
-elasticsearchCertificateAuthorities: ""
-elasticsearchSslVerificationMode: "none"
-
-kibanaConfig:
-  kibana.yml: |
-    elasticsearch.ssl.verificationMode: none
-    server.host: "0.0.0.0"
-
-protocol: "http"
-
-service:
-  port: 5601
-
-resources:
-  requests:
-    cpu: "100m"
-    memory: "500Mi"
-  limits:
-    cpu: "1000m"
-    memory: "1Gi"
-
-server:
-  extraArgs:
-    - --insecure
+persistence:
+  enabled: true
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -31,12 +8,5 @@ server:
     paths:
       - /kibana
 
-    tls:
-      - hosts:
-          - carmit-crm.zapto.org
-        secretName: carmit-crm-tls-m62sj
-        
-  config:
-    users.anonymous.enabled: "true"
 
 

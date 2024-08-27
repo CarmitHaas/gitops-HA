@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kibana
+  namespace: argocd 
+spec: 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  project: default
+  sources:
+  - repoURL: git@github.com:CarmitHaas/gitops-HA.git
+    targetRevision: HEAD
+    ref: infra-apps 
+  - repoURL: https://helm.elastic.co
+    chart: kibana
+    targetRevision: 8.5.1
+    helm:
+      valueFiles:
+        - "$infra-apps/infra-apps-values/cert-manager-values.yaml"
+      valuesObject:
+        resources:
+          requests: 
+            cpu: 0m
+          limits:
+            cpu: 500m
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    

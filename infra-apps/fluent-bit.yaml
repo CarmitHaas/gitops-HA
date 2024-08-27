@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-bit
+  namespace: argocd 
+spec: 
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  project: default
+  sources:
+    - repoURL: git@github.com:CarmitHaas/gitops-HA.git
+      targetRevision: HEAD
+      ref: infra-apps 
+    - repoURL: https://fluent.github.io/helm-charts
+      chart: fluent-bit
+      targetRevision: 0.47.7
+      helm:
+        valueFiles:
+          - "$infra-apps/infra-apps-values/cert-manager-values.yaml"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
