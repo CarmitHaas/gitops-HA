@@ -7,6 +7,5 @@ dependencies:
     version: 0.1.0
     repository: file://charts/horsing-around
   - name: mongodb
-    version: 13.6.0
-    repository: https://charts.bitnami.com/bitnami
-    condition: mongodb.enabled
+    version: 15.6.20
+    repository: file://charts/mongodb
