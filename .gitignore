@@ -1,6 +1,6 @@
-# Kubernetes secrets
-*secret.yaml
-!sealed-*secret.yaml
+# # Kubernetes secrets
+# *secret.yaml
+# !sealed-*secret.yaml
 
 # Helm chart dependencies
 **/charts/*.tgz
