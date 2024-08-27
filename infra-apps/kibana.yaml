@@ -1,45 +1,45 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: kibana
-  namespace: argocd 
-spec: 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default
-  project: default
-  sources:
-  - repoURL: git@github.com:CarmitHaas/gitops-HA.git
-    targetRevision: HEAD
-    ref: infra-apps 
-  - repoURL: https://helm.elastic.co
-    chart: kibana
-    targetRevision: 8.5.1
-    helm:
-      valueFiles:
-        - "$infra-apps/infra-apps-values/cert-manager-values.yaml"
-      values: |
-        elasticsearchHosts: "https://elasticsearch-master:9200"
-        kibanaConfig:
-          kibana.yml: |
-            elasticsearch.hosts: ["https://elasticsearch-master:9200"]
-            elasticsearch.ssl.verificationMode: none
-        protocol: https
-        resources:
-          requests: 
-            cpu: 0m
-          limits:
-            cpu: 500m
-        persistence:
-          enabled: true
-        ingress:
-          enabled: true
-          ingressClassName: nginx
-          hosts:
-            - carmit-crm.zapto.org
-          paths:
-            - /kibana
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: kibana
+#   namespace: argocd 
+# spec: 
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: default
+#   project: default
+#   sources:
+#   - repoURL: git@github.com:CarmitHaas/gitops-HA.git
+#     targetRevision: HEAD
+#     ref: infra-apps 
+#   - repoURL: https://helm.elastic.co
+#     chart: kibana
+#     targetRevision: 8.5.1
+#     helm:
+#       valueFiles:
+#         - "$infra-apps/infra-apps-values/cert-manager-values.yaml"
+#       values: |
+#         elasticsearchHosts: "https://elasticsearch-master:9200"
+#         kibanaConfig:
+#           kibana.yml: |
+#             elasticsearch.hosts: ["https://elasticsearch-master:9200"]
+#             elasticsearch.ssl.verificationMode: none
+#         protocol: https
+#         resources:
+#           requests: 
+#             cpu: 0m
+#           limits:
+#             cpu: 500m
+#         persistence:
+#           enabled: true
+#         ingress:
+#           enabled: true
+#           ingressClassName: nginx
+#           hosts:
+#             - carmit-crm.zapto.org
+#           paths:
+#             - /kibana
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true

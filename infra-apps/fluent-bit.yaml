@@ -1,24 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: fluent-bit
-  namespace: argocd 
-spec: 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default
-  project: default
-  sources:
-    - repoURL: git@github.com:CarmitHaas/gitops-HA.git
-      targetRevision: HEAD
-      ref: infra-apps 
-    - repoURL: https://fluent.github.io/helm-charts
-      chart: fluent-bit
-      targetRevision: 0.47.7
-      helm:
-        valueFiles:
-          - "$infra-apps/infra-apps-values/cert-manager-values.yaml"
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: elasticsearch
+#   namespace: argocd
+# spec:
+#   project: default
+#   source:
+#     repoURL: https://helm.elastic.co
+#     chart: elasticsearch
+#     targetRevision: 8.5.1
+#     helm:
+#       values: |
+#         replicas: 1
+#         secret:
+#           password: "elastic"
+#   destination:
+#     server: 'https://kubernetes.default.svc'
+#     namespace: default
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+#   annotations:
+#     argocd.argoproj.io/sync-wave: "0"

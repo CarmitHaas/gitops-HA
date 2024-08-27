@@ -1,42 +1,51 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: elasticsearch
-  namespace: argocd 
-spec: 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: default
-  project: default
-  source:
-    repoURL: https://helm.elastic.co
-    chart: elasticsearch
-    targetRevision: 7.17.3  # Using a 7.x version
-    helm:
-      values: |
-        clusterName: "elasticsearch"
-        nodeGroup: "master"
-        esConfig:
-          elasticsearch.yml: |
-            xpack.security.enabled: false
-            xpack.security.transport.ssl.enabled: false
-            xpack.security.http.ssl.enabled: false
-            discovery.type: single-node
-        antiAffinity: "soft"
-        resources:
-          requests: 
-            cpu: 100m
-            memory: 512M
-          limits:
-            cpu: 1000m
-            memory: 2Gi
-        volumeClaimTemplate:
-          accessModes: [ "ReadWriteOnce" ]
-          resources:
-            requests:
-              storage: 5Gi
-        protocol: http
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: elasticsearch
+#   namespace: argocd
+# spec:
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: default
+#   project: default
+#   source:
+#     repoURL: https://helm.elastic.co
+#     chart: elasticsearch
+#     targetRevision: 7.17.3
+#     helm:
+#       values: |
+#         clusterName: "elasticsearch"
+#         nodeGroup: "master"
+#         masterService: {}  
+#         roles:
+#           - master
+#           - data
+#           - ingest
+#         replicas: 1
+#         minimumMasterNodes: 1
+#         esConfig:
+#           elasticsearch.yml: |
+#             discovery.type: single-node
+#             xpack.security.enabled: false
+#             xpack.security.transport.ssl.enabled: false
+#             xpack.security.http.ssl.enabled: false
+#         antiAffinity: "soft"
+#         resources:
+#           requests: 
+#             cpu: 100m
+#             memory: 512M
+#           limits:
+#             cpu: 1000m
+#             memory: 2Gi
+#         volumeClaimTemplate:
+#           accessModes: [ "ReadWriteOnce" ]
+#           resources:
+#             requests:
+#               storage: 5Gi
+#         protocol: http
+#         image:
+#           tag: "7.17.3"
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
