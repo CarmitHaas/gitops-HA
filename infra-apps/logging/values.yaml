@@ -1,11 +1,34 @@
 # Elasticsearch values
 elasticsearch:
-  replicas: 2
+  replicas: 1  # Reduced from 2 to 1
   minimumMasterNodes: 1
   persistence:
     enabled: true
     labels:
       enabled: true
+  
+  # Add resource limits and requests
+  resources:
+    requests:
+      cpu: "100m"  # Request 0.1 CPU cores
+      memory: "512Mi"  # Request 512MB of memory
+    limits:
+      cpu: "500m"  # Limit to 0.5 CPU cores
+      memory: "1Gi"  # Limit to 1GB of memory
+
+  # Adjust Java heap size
+  esJavaOpts: "-Xmx512m -Xms512m"
+
+  # Disable features you might not need
+  xpack.security.enabled: false
+  xpack.monitoring.enabled: false
+
+  # Configure smaller disk size if needed
+  volumeClaimTemplate:
+    accessModes: [ "ReadWriteOnce" ]
+    resources:
+      requests:
+        storage: 5Gi 
   
 # Kibana values
 kibana:
