@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "horsing-around.fullname" . }}
-  labels:
-    {{- include "horsing-around.labels" . | nindent 4 }}
+  name: {{ .Values.service.name }}
+  labels: 
+    {{ toYaml .Values.app.labels | indent 4  }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-      protocol: TCP
+      name: web
+      targetPort: {{ .Values.app.port }}
   selector:
-    {{- include "horsing-around.selectorLabels" . | nindent 4 }}
+    {{ toYaml .Values.app.labels | indent 4  }}

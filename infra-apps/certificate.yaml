@@ -1,13 +1,11 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: carmit-crm-tls
-  namespace: horsing-around
+  name: {{ .Values.ingress.tls.secretName }}
 spec:
-  secretName: carmit-crm-tls-xsb92
-  issuerRef:
-    name: letsencrypt-prod
+  secretName: {{ .Values.ingress.tls.secretName }}
+  issuerRef: 
+    name: cluster-issuer-prod
     kind: ClusterIssuer
-  commonName: carmit-crm.zapto.org
   dnsNames:
     - carmit-crm.zapto.org

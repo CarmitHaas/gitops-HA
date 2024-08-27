@@ -1,47 +1,51 @@
-replicaCount: 3
+app:
+  name: "horsing-around"
+  port: 5000
+  isMongo: true
+  labels:
+    app: horsing-around
 
-image:
-  repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
-  tag: latest
-  pullPolicy: IfNotPresent
+deployment:
+  replicas: 2
+  image:
+    repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
+    pullPolicy: IfNotPresent
+    tag: latest
 
 service:
+  name: horsing-around-service
   type: ClusterIP
   port: 80
-  targetPort: 5000
-
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-  hosts:
-    - host: carmit-crm.zapto.org
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - hosts:
-        - carmit-crm.zapto.org
-      secretName: carmit-crm-tls-xsb92
-
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 500m
-    memory: 512Mi
 
 configMap:
-  logLevel: info
-  persistence: "true"
+  name: horsing-around-conf
+  data:
+    PERSISTENCE: "false"
+    LOG_LEVEL: "debug"
+
+secret:
+  name: horsing-around-secret
+  type: Opaque
+
+ingress: 
+  enabled: true
+  name: horsing-around-ingress
+  className: nginx
+  tls: 
+    secretName: horsing-around-cert
+  hosts:
+    host: carmit-crm.zapto.org
+    paths:
+      path: /
+      pathType: Prefix
 
 mongodb:
+  architecture: replicaset 
+  replicaCount: 2 
   auth:
-    existingSecret: mongodb-secret
-    rootPasswordKey: mongodb-root-password
-    replicaSetKey: mongodb-replica-set-key
-    passwordsKey: mongodb-passwords
-  architecture: replicaset
-  replicaCount: 3
+    enabled: true 
+    rootUser: "root"
+    rootPassword: "admin"
+  persistence:
+    enabled: true
+    size: 3Gi

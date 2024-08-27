@@ -1,35 +1,51 @@
-horsing-around:
-  ingress:
-    enabled: true
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    hosts:
-      - host: carmit-crm.zapto.org
-        paths:
-          - path: /
-            pathType: Prefix
-    tls:
-      - hosts:
-          - carmit-crm.zapto.org
-        secretName: carmit-crm-tls-xsb92
+app:
+  name: "horsing-around"
+  port: 5000
+  isMongo: true
+  labels:
+    app: horsing-around
 
+deployment:
+  replicas: 2
   image:
     repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
+    pullPolicy: IfNotPresent
     tag: latest
 
-mongodb:
+service:
+  name: horsing-around-service
+  type: ClusterIP
+  port: 80
+
+configMap:
+  name: horsing-around-conf
+  data:
+    PERSISTENCE: "false"
+    LOG_LEVEL: "debug"
+
+secret:
+  name: horsing-around-secret
+  type: Opaque
+
+ingress: 
   enabled: true
-  ingress:
-    enabled: false
+  name: horsing-around-ingress
+  className: nginx
+  tls: 
+    secretName: horsing-around-cert
+  hosts:
+    host: carmit-crm.zapto.org
+    paths:
+      path: /
+      pathType: Prefix
+
+mongodb:
+  architecture: replicaset 
+  replicaCount: 2 
   auth:
-    existingSecret: mongodb-secret
-    rootPasswordKey: mongodb-root-password
-    replicaSetKey: mongodb-replica-set-key
-    passwordsKey: mongodb-passwords
-  architecture: replicaset
-  replicaCount: 3
+    enabled: true 
+    rootUser: "root"
+    rootPassword: "admin"
   persistence:
     enabled: true
-    storageClass: "gp2"
-    size: 8Gi
+    size: 3Gi

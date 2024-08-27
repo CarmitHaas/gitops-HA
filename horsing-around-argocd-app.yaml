@@ -33,30 +33,29 @@ spec:
       jsonPointers:
         - /data
 ---
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: horsing-around-secrets
-  namespace: argocd
-spec:
-  destination:
-    namespace: horsing-around
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: .
-    repoURL: git@github.com:CarmitHaas/gitops-HA.git
-    targetRevision: HEAD
-    directory:
-      include: sealed-mongodb-secret.yaml
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: horsing-around-secrets
+#   namespace: argocd
+# spec:
+#   destination:
+#     namespace: horsing-around
+#     server: https://kubernetes.default.svc
+#   project: default
+#   source:
+#     path: .
+#     repoURL: git@github.com:CarmitHaas/gitops-HA.git
+#     targetRevision: HEAD
+#     directory:
+#       include: sealed-mongodb-secret.yaml
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#       - CreateNamespace=true
 ---
-
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -73,18 +72,13 @@ spec:
     targetRevision: 13.6.0
     helm:
       values: |
-        auth:
-          existingSecret: mongodb-secret
-          rootPasswordKey: mongodb-root-password
-          replicaSetKey: mongodb-replica-set-key
-          passwordsKey: mongodb-passwords
-        ingress:
-          enabled: false
         architecture: replicaset
-        replicaCount: 3
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+        replicaCount: 2
+        auth:
+          enabled: true
+          rootUser: "root"
+          rootPassword: "admin"
+        persistence:
+          enabled: true
+          size: 3Gi
+

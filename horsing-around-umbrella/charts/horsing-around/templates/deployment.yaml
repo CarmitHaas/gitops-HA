@@ -1,35 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "horsing-around.fullname" . }}
+  name: {{ .Values.app.name }}
   labels:
-    {{- include "horsing-around.labels" . | nindent 4 }}
+    {{ toYaml .Values.app.labels | indent 4  }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      {{- include "horsing-around.selectorLabels" . | nindent 6 }}
+      {{ toYaml .Values.app.labels | indent 4  }}
   template:
     metadata:
-      labels:
-        {{- include "horsing-around.labels" . | nindent 8 }}
+      labels: 
+        {{ toYaml .Values.app.labels | indent 4  }}
     spec:
+      imagePullSecrets:
+        - name: contacts-app-gitlab-creds
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.app.name }}
+          image: "{{ .Values.deployment.image.repository }}:{{.Values.deployment.image.tag}}"
           ports:
-            - containerPort: {{ .Values.service.targetPort }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+          - containerPort: {{ .Values.app.port }}
           envFrom:
+            - secretRef: 
+                name: {{ .Values.secret.name }}
             - configMapRef:
-                name: {{ include "horsing-around.fullname" . }}-config
-            - secretRef:
-                name: mongodb-secret
-          env:
-            - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-secret
-                  key: mongodb-uri
+                name: {{ .Values.configMap.name }}
