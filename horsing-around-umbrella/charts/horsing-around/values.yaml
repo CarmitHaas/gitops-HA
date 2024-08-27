@@ -49,3 +49,5 @@ mongodb:
   persistence:
     enabled: true
     size: 3Gi
+  service:
+    name: horsing-around-mongodb-headless
