@@ -12,8 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "horsing-around.labels" . | nindent 4 }}
-        {{- include "horsing-around.selectorLabels" . | nindent 8 }}
+        {{- include "horsing-around.labels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
