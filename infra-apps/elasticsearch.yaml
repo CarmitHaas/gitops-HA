@@ -16,11 +16,14 @@ spec:
       valuesObject:
         secret:
           password: "elastic"
+        replicas: 2  
         resources:
-          requests: 
-            cpu: 0m
+          requests:
+            cpu: "100m"
+            memory: "1Gi"
           limits:
-            cpu: 500m
+            cpu: "1000m"
+            memory: "2Gi"
           volumeClaimTemplate:
             resources:
               requests:
