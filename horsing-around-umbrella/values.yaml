@@ -38,7 +38,7 @@ ingress:
   tls: 
     secretName: horsing-around-cert
   hosts:
-    host: carmit-crm.zapto.org
+    host: horsing-around.zapto.org
     paths:
       path: /
       pathType: Prefix

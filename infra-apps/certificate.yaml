@@ -8,4 +8,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - carmit-crm.zapto.org
+    - horsing-around.zapto.org

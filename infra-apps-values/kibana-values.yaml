@@ -4,7 +4,7 @@ persistence:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - carmit-crm.zapto.org
+      - horsing-around.zapto.org
     paths:
       - /kibana
 

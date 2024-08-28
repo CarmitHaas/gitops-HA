@@ -34,12 +34,12 @@ kibana:
     className: "nginx"
     pathtype: ImplementationSpecific
     hosts:
-      - host: carmit-crm.zapto.org
+      - host: horsing-around.zapto.org
         paths:
           - path: /kibana
     tls:
       - hosts:
-          - carmit-crm.zapto.org
+          - horsing-around.zapto.org
         # secretName: 
 
 # Fluent-bit values
