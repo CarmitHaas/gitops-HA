@@ -9,7 +9,7 @@ deployment:
   replicas: 2
   image:
     repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: latest
 
 service:
@@ -31,6 +31,10 @@ ingress:
   enabled: true
   name: horsing-around-ingress
   className: nginx
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
   tls: 
     secretName: horsing-around-cert
   hosts:
