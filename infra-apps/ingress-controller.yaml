@@ -12,6 +12,13 @@ spec:
     chart: ingress-nginx
     repoURL: https://kubernetes.github.io/ingress-nginx
     targetRevision: 4.7.1
+    helm:
+      values: |
+        controller:
+          config:
+            ssl-protocols: "TLSv1.2 TLSv1.3"
+          extraArgs:
+            default-ssl-certificate: "horsing-around/horsing-around-cert"
   syncPolicy:
     automated:
       prune: true

@@ -30,7 +30,7 @@ config:
                 Read_From_Tail On
 
           filters: |
-            [FILTER]
+            [FIL]
                 Name kubernetes
                 Match kube.*
                 Merge_Log On
@@ -49,7 +49,7 @@ config:
                 tls On
                 tls.verify Off
                 Logstash_Format On
-                Logstash_Prefix logstash
+                Logstash_Prefix horse
                 Retry_Limit False
                 Suppress_Type_Name On
 
