@@ -2,10 +2,12 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: horsing-around-cert
+  namespace: horsing-around
 spec:
   secretName: horsing-around-cert
-  issuerRef: 
+  issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
+  commonName: horsing-around.zapto.org
   dnsNames:
     - horsing-around.zapto.org
