@@ -32,7 +32,7 @@ ingress:
   name: horsing-around-ingress
   className: nginx
   tls: 
-    secretName: horsing-around-cert
+    secretName: horsing-around/horsing-around-cert
   hosts:
     host: horsing-around.zapto.org
     paths:
