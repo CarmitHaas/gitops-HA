@@ -24,7 +24,7 @@ configMap:
     LOG_LEVEL: "debug"
 
 secret:
-  name: horsing-around-cert
+  name: horsing-around-secret
   type: Opaque
 
 ingress: 

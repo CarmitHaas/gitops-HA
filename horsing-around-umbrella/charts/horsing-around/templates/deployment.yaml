@@ -14,8 +14,6 @@ spec:
       labels: 
         {{ toYaml .Values.app.labels | indent 4  }}
     spec:
-      imagePullSecrets:
-        - name: contacts-app-gitlab-creds
       containers:
         - name: {{ .Values.app.name }}
           image: "{{ .Values.deployment.image.repository }}:{{.Values.deployment.image.tag}}"
