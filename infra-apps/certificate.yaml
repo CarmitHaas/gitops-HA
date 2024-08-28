@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: horsing-around-cert
   issuerRef: 
-    name: cluster-issuer-prod
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
     - carmit-crm.zapto.org
