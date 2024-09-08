@@ -54,8 +54,8 @@ mongodb:
     rootPasswordKey: mongodb-root-password
     replicaSetKey: mongodb-replica-set-key
     userPasswordKey: mongodb-passwords
-    username: ""
-    database: ""
+    username: root
+    database: horsing-around
   persistence:
     enabled: true
     size: 3Gi

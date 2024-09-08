@@ -46,7 +46,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: horsing-around-secrets
+    #path: horsing-around-secrets
     repoURL: git@github.com:CarmitHaas/gitops-HA.git
     targetRevision: HEAD
     directory:
