@@ -25,20 +25,20 @@ spec:
                 secretKeyRef:
                   name: horsing-around-mongodb-secret
                   key: mongodb-root-password
-            - name: MONGODB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: horsing-around-secret
-                  key: mongodb-username
-            - name: MONGODB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: horsing-around-secret
-                  key: mongodb-database
+            # - name: MONGODB_USERNAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: horsing-around-secret
+            #       key: mongodb-username
+            # - name: MONGODB_DATABASE
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: horsing-around-secret
+            #       key: mongodb-database
             - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: horsing-around-secret
+                  name: horsing-around-mongodb-secret
                   key: mongodb-uri
           envFrom:
             # - secretRef: 
