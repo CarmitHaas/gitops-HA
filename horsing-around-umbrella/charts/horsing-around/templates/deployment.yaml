@@ -36,10 +36,11 @@ spec:
             #       name: horsing-around-secret
             #       key: mongodb-database
             - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: horsing-around-mongodb-secret
-                  key: mongodb-uri
+              value: mongodb://root:$(MONGODB_ROOT_PASSWORD)@horsing-around-mongodb-0.horsing-around-mongodb-headless.horsing-around.svc.cluster.local:27017,horsing-around-mongodb-1.horsing-around-mongodb-headless.horsing-around.svc.cluster.local:27017/$(MONGODB_DATABASE)?replicaSet=rs0
+              # valueFrom:
+              #   secretKeyRef:
+              #     name: horsing-around-mongodb-secret
+              #     key: mongodb-uri
           envFrom:
             # - secretRef: 
             #     name: {{ .Values.secret.name }}
