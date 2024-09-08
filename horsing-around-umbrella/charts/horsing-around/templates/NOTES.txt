@@ -21,13 +21,13 @@ To get the application URL, run these commands:
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
 {{- end }}
 
-MongoDB can be accessed via port {{ .Values.mongodb.service.ports.mongodb }} on the following DNS names from within your cluster:
+MongoDB can be accessed via port 27017 on the following DNS names from within your cluster:
 {{ .Release.Name }}-mongodb-0.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local
 {{ .Release.Name }}-mongodb-1.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local
 
 To get the root password run:
 
-    kubectl get secret --namespace {{ .Release.Namespace }} horsing-around-mongodb-secret -o jsonpath="{.data.mongodb-root-password}" | base64 --decode
+    kubectl get secret --namespace {{ .Release.Namespace }} {{ .Values.mongodb.auth.existingSecret }} -o jsonpath="{.data.{{ .Values.mongodb.auth.rootPasswordKey }}}" | base64 --decode
 
 To connect to your database run the following command:
 
