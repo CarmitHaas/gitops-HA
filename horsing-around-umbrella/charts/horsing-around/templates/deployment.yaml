@@ -23,7 +23,7 @@ spec:
       - name: MONGODB_ROOT_PASSWORD
         valueFrom:
           secretKeyRef:
-            name: horsing-around-mongodb-secret
+            name: horsing-around-secret
             key: mongodb-root-password
       - name: MONGODB_USERNAME
         valueFrom:
