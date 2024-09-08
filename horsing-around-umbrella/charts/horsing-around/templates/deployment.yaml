@@ -20,28 +20,11 @@ spec:
           ports:
           - containerPort: {{ .Values.app.port }}
           env:
-            - name: MONGODB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: horsing-around-mongodb-secret
-                  key: mongodb-root-password
-            # - name: MONGODB_USERNAME
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: horsing-around-secret
-            #       key: mongodb-username
-            # - name: MONGODB_DATABASE
-            #   valueFrom:
-            #     secretKeyRef:
-            #       name: horsing-around-secret
-            #       key: mongodb-database
             - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: horsing-around-mongodb-secret
                   key: mongodb-uri
           envFrom:
-            # - secretRef: 
-            #     name: {{ .Values.secret.name }}
             - configMapRef:
                 name: {{ .Values.configMap.name }}
