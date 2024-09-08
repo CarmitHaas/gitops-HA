@@ -49,12 +49,12 @@ mongodb:
   architecture: replicaset 
   replicaCount: 2 
   auth:
-    existingSecret: mongodb-secret
+    existingSecret: horsing-around-mongodb-secret
     rootPasswordKey: mongodb-root-password
     replicaSetKey: mongodb-replica-set-key
     userPasswordKey: mongodb-passwords
-    username: ""
-    database: ""
+    username: root
+    database: horsing-around
   persistence:
     enabled: true
     size: 3Gi
