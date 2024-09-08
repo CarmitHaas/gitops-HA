@@ -46,7 +46,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: .
+    path: horsing-around-umbrella
     repoURL: git@github.com:CarmitHaas/gitops-HA.git
     targetRevision: HEAD
     directory:
