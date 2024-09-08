@@ -49,9 +49,12 @@ mongodb:
   architecture: replicaset 
   replicaCount: 2 
   auth:
-    enabled: true 
-    rootUser: "root"
-    rootPassword: "admin"
+    existingSecret: mongodb-secret
+    rootPasswordKey: mongodb-root-password
+    replicaSetKey: mongodb-replica-set-key
+    userPasswordKey: mongodb-passwords
+    username: ""
+    database: ""
   persistence:
     enabled: true
     size: 3Gi
