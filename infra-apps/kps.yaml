@@ -18,6 +18,9 @@ spec:
           prometheusSpec:
             podMonitorSelectorNilUsesHelmValues: false
             serviceMonitorSelectorNilUsesHelmValues: false
+            serviceMonitorSelector:
+              matchLabels:
+                release: prometheus
   syncPolicy:
     automated:
       prune: true

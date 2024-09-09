@@ -4,6 +4,7 @@ metadata:
   name: {{ .Values.service.name }}
   labels:
     {{ toYaml .Values.app.labels | indent 4  }}
+    release: prometheus 
 spec:
   selector:
     matchLabels:
