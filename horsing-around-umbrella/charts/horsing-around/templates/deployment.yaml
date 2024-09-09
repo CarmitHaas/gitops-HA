@@ -19,8 +19,12 @@ spec:
           image: "{{ .Values.deployment.image.repository }}:{{.Values.deployment.image.tag}}"
           ports:
           - containerPort: {{ .Values.app.port }}
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.name }}
+                  key: MONGO_URI
           envFrom:
-            - secretRef: 
-                name: {{ .Values.secret.name }}
             - configMapRef:
                 name: {{ .Values.configMap.name }}

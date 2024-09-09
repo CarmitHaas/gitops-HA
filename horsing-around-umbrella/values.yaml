@@ -24,7 +24,7 @@ configMap:
     LOG_LEVEL: "debug"
 
 secret:
-  name: horsing-around-secret
+  name: horsing-around-mongodb
   type: Opaque
 
 ingress:
@@ -50,9 +50,12 @@ mongodb:
   architecture: replicaset 
   replicaCount: 2 
   auth:
-    enabled: true 
-    rootUser: "root"
-    rootPassword: "admin"
+    enabled: true
+    existingSecret: horsing-around-mongodb
+    rootPasswordKey: mongodb-root-password
+    userPasswordKey: mongodb-passwords
+    username: root
+    database: admin
   persistence:
     enabled: true
     size: 3Gi
