@@ -61,7 +61,7 @@ https://horsing-around.zapto.org
 
 - Grafana: kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090
            kubectl port-forward svc/kube-prometheus-stack-grafana  8080:80
-- Kibana:  kubectl port-forward svc/efk-stack-kibana 15601:5601
+- Kibana:  kubectl port-forward svc/efk-stack-kibana 15601:5601 -n logging
 
 
 ## Contributing
