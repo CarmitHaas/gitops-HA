@@ -20,7 +20,7 @@ spec:
           ports:
           - containerPort: {{ .Values.app.port }}
           env:
-            - name: MONGODB_URI
+            - name: MONGO_URI
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secret.name }}
