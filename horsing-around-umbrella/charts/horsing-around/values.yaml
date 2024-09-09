@@ -24,7 +24,7 @@ configMap:
     LOG_LEVEL: "debug"
 
 secret:
-  name: horsing-around-secret
+  name: horsing-around-mongodb
   type: Opaque
 
 ingress:
