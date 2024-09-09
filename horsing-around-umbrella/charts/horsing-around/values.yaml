@@ -55,8 +55,8 @@ mongodb:
   persistence:
     enabled: true
     size: 3Gi
-    storageClass: "ebs-sc"
+    storageClass: "gp2"
   global:
-    storageClass: "ebs-sc"
+    storageClass: "gp2"
   service:
     name: horsing-around-mongodb-headless
