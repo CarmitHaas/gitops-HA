@@ -1,165 +1,43 @@
-various Kubernetes resources and concepts, providing examples from the "Horsing Around" project where applicable.
+Thank you for installing {{ .Chart.Name }}.
 
-Pods:
+Your release is named {{ .Release.Name }}.
 
-The smallest deployable units in Kubernetes.
-Usually contain one or more containers.
-Share the same network namespace and can communicate via localhost.
+To get the application URL, run these commands:
+{{- if .Values.ingress.enabled }}
+  https://{{ (index .Values.ingress.hosts 0).host }}/
+{{- else if contains "NodePort" .Values.service.type }}
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "horsing-around.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+        You can watch the status of by running 'kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "horsing-around.fullname" . }}'
+  export SERVICE_IP=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ include "horsing-around.fullname" . }} --template "{{ "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}" }}")
+  echo http://$SERVICE_IP:{{ .Values.service.port }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "horsing-around.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
 
-Example from the project:
-While we don't directly define Pods, our Deployments create Pods for the Horsing Around application.
-Deployments:
+MongoDB can be accessed via port 27017 on the following DNS names from within your cluster:
 
-Manage a set of identical Pods.
-Ensure a specified number of Pod replicas are running.
-Support rolling updates and rollbacks.
+{{ .Release.Name }}-mongodb-0.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local
+{{ .Release.Name }}-mongodb-1.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local
 
-Example from the project:
-yamlCopyapiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: {{ .Values.app.name }}
-spec:
-  replicas: {{ .Values.deployment.replicas }}
-  selector:
-    matchLabels:
-      {{ toYaml .Values.app.labels | indent 4 }}
-  template:
-    # ... pod template spec ...
-This Deployment manages the Horsing Around application Pods.
-StatefulSets:
+To get the root password run:
 
-Similar to Deployments, but for stateful applications.
-Provide stable network identities and persistent storage.
+    kubectl get secret --namespace {{ .Release.Namespace }} {{ .Values.mongodb.auth.existingSecret }} -o jsonpath="{.data.mongodb-root-password}" | base64 --decode
 
-Example from the project:
-The MongoDB replica set is likely managed by a StatefulSet (not shown in the provided snippets, but typically used for databases).
-Services:
+To connect to your database, create a MongoDB client container:
 
-Provide a stable network endpoint for a set of Pods.
-Enable service discovery and load balancing.
+    kubectl run --namespace {{ .Release.Namespace }} mongodb-client --rm --tty -i --restart='Never' --image docker.io/bitnami/mongodb:7.0.12-debian-12-r6 --command -- bash
 
-Example from the project:
-yamlCopyapiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.service.name }}
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.app.port }}
-This Service exposes the Horsing Around application within the cluster.
-Ingress:
+Then, run the following command:
+    mongo admin --host "{{ .Release.Name }}-mongodb-0.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local:27017,{{ .Release.Name }}-mongodb-1.{{ .Release.Name }}-mongodb-headless.{{ .Release.Namespace }}.svc.cluster.local:27017" --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
 
-Manages external access to Services.
-Provides HTTP/HTTPS routing.
+To connect to your database from outside the cluster execute the following commands:
 
-Example from the project:
-yamlCopyapiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ .Values.ingress.name }}
-spec:
-  ingressClassName: {{ .Values.ingress.className }}
-  rules:
-    - host: {{ .Values.ingress.hosts[0].host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Values.service.name }}
-                port: 
-                  number: {{ .Values.service.port }}
-This Ingress routes external traffic to the Horsing Around Service.
-ConfigMaps:
-
-Store non-confidential configuration data.
-Can be consumed as environment variables, command-line arguments, or configuration files.
-
-Example from the project:
-yamlCopyapiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.configMap.name }}
-data:
-  PERSISTENCE: {{ .Values.app.isMongo | quote }}
-  LOG_LEVEL: {{ .Values.configMap.data.LOG_LEVEL }}
-This ConfigMap stores configuration for the Horsing Around application.
-Secrets:
-
-Similar to ConfigMaps, but for sensitive data.
-Base64 encoded in etcd.
-
-Example from the project:
-yamlCopyapiVersion: v1
-kind: Secret
-metadata:
-  name: horsing-around-secret
-type: Opaque
-stringData:
-  mongodb-uri: mongodb://root:${MONGODB_ROOT_PASSWORD}@horsing-around-mongodb-headless...
-This Secret stores the MongoDB URI.
-Persistent Volumes (PV) and Persistent Volume Claims (PVC):
-
-PVs represent physical storage resources.
-PVCs are requests for storage by users.
-
-Example from the project:
-While not explicitly shown, the MongoDB StatefulSet likely uses PVCs for persistent storage.
-Namespaces:
-
-Virtual clusters within a physical cluster.
-Provide a scope for names and can be used for multi-tenancy.
-
-Example from the project:
-yamlCopymetadata:
-  namespace: horsing-around
-The project uses a dedicated "horsing-around" namespace.
-Labels and Selectors:
-
-Labels are key/value pairs attached to objects.
-Selectors use labels to identify sets of objects.
-
-Example from the project:
-yamlCopymetadata:
-  labels:
-    {{ toYaml .Values.app.labels | indent 4 }}
-Labels are used throughout the project for identifying resources.
-Custom Resource Definitions (CRDs):
-
-Extend Kubernetes API with custom resources.
-
-Example from the project:
-The project uses CRDs for ArgoCD Applications and Sealed Secrets:
-yamlCopyapiVersion: argoproj.io/v1alpha1
-kind: Application
-
-DaemonSets:
-
-Ensure that all (or some) nodes run a copy of a Pod.
-Useful for cluster-wide services like logging or monitoring agents.
-
-While not explicitly shown, the project might use DaemonSets for components of the EFK stack.
-Jobs and CronJobs:
-
-Jobs create Pods that run to completion.
-CronJobs create Jobs on a schedule.
-
-These could be used in the project for periodic tasks like database backups or maintenance.
-Role-Based Access Control (RBAC):
-
-Regulates access to Kubernetes resources.
-Includes Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings.
-
-While not shown, RBAC is crucial for securing access to cluster resources, especially in a production environment.
-Network Policies:
-
-Define how Pods communicate with each other and other network endpoints.
-Important for implementing the principle of least privilege in network communication.
-
-These could be used to restrict network access between components in the Horsing Around project.
-
-Understanding these Kubernetes resources and concepts is crucial for effectively designing, deploying, and managing applications in a Kubernetes environment. The Horsing Around project demonstrates the use of many of these resources in a real-world scenario, showcasing how they work together to create a complete, scalable, and manageable application infrastructure.
+    kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ .Release.Name }}-mongodb 27017:27017 &
+    mongo --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWORD
