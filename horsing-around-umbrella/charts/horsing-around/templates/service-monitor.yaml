@@ -3,13 +3,12 @@ kind: ServiceMonitor
 metadata:
   name: {{ .Values.service.name }}
   labels:
-    app: {{ .Values.app.name }}
+    {{ toYaml .Values.app.labels | indent 4 }}
     release: prometheus
 spec:
   selector:
     matchLabels:
-      app: {{ .Values.app.name }}
+      {{ toYaml .Values.app.labels | indent 6 }}
   endpoints:
   - port: metrics
-    targetPort: 5000
     path: /metrics

@@ -3,12 +3,17 @@ kind: Service
 metadata:
   name: {{ .Values.service.name }}
   labels: 
-    {{ toYaml .Values.app.labels | indent 4  }}
+    {{ toYaml .Values.app.labels | indent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       name: web
       targetPort: {{ .Values.app.port }}
+    {{- if .Values.service.metricsPort }}
+    - port: {{ .Values.service.metricsPort }}
+      name: metrics
+      targetPort: {{ .Values.app.port }}
+    {{- end }}
   selector:
-    {{ toYaml .Values.app.labels | indent 4  }}
+    {{ toYaml .Values.app.labels | indent 4 }}

@@ -16,6 +16,7 @@ service:
   name: horsing-around-service
   type: ClusterIP
   port: 80
+  metricsPort: 5000 
 
 configMap:
   name: horsing-around-conf
