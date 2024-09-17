@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra-applications
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: git@github.com:CarmitHaas/gitops-HA.git
+        revision: HEAD
+        files:
+          - path: "infra-apps/*.yaml"
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: git@github.com:CarmitHaas/gitops-HA.git
+        targetRevision: HEAD
+        path: '{{path.dir}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{metadata.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
