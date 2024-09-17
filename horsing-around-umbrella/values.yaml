@@ -8,7 +8,7 @@ app:
 deployment:
   replicas: 2
   image:
-    repository: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
+    repository: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio
     pullPolicy: Always
     tag: latest
 

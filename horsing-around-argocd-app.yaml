@@ -4,7 +4,7 @@ metadata:
   name: horsing-around
   namespace: argocd
   annotations:
-    argocd-image-updater.argoproj.io/image-list: 644435390668.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio:~v1.0
+    argocd-image-updater.argoproj.io/image-list: <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/carmit-portfolio:~v1.0
 spec:
   destination:
     namespace: horsing-around

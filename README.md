@@ -1,69 +1,93 @@
-# Horsing Around
+# Horsing Around - GitOps
 
-Horsing Around is a Kubernetes-based application deployment using ArgoCD for GitOps and Helm for package management. This repository contains the configuration for deploying the Horsing Around application along with its dependencies and infrastructure components.
+ArgoCD GitOps configuration for the Horsing Around application. Uses the App-of-Apps pattern to manage both the application and infrastructure components on EKS.
 
-## Architecture
+![ArgoCD Applications](argocd-apps.png)
 
-The application is deployed on Amazon EKS and consists of the following main components:
+## Related Repositories
 
-1. Horsing Around Application
-2. MongoDB Replica Set
-3. Ingress-Nginx Controller
-4. Cert-Manager for SSL/TLS
-5. Prometheus and Grafana for monitoring
-6. EFK Stack for logging
+- [Horsing-Around](https://github.com/CarmitHaas/Horsing-Around) - Application source code + Jenkins CI/CD
+- [HA-infrastructure](https://github.com/CarmitHaas/HA-infrastructure) - Terraform EKS cluster
 
-[Will insert an architecture diagram here showing the components and their interactions]
+## What Gets Deployed
+
+ArgoCD manages 6 applications via the App-of-Apps pattern:
+
+| Application | Purpose | Namespace |
+|-------------|---------|-----------|
+| horsing-around | Flask app + MongoDB replica set (umbrella chart) | horsing-around |
+| ingress-nginx | Ingress controller for external access | ingress-nginx |
+| cert-manager | Automatic TLS certificates via Let's Encrypt | cert-manager |
+| kube-prometheus-stack | Prometheus + Grafana monitoring | default |
+| efk-stack | Elasticsearch + Fluent Bit + Kibana logging | logging |
+| sealed-secrets | Encrypted secrets that can live in Git | kube-system |
 
 ## Repository Structure
 
-- `/horsing-around-umbrella`: Main Helm chart for the Horsing Around application
-- `/infra-apps`: Infrastructure applications (cert-manager, ingress-nginx, etc.)
-- `/charts`: Subcharts for Horsing Around and MongoDB
+```
+├── horsing-around-argocd-app.yaml    # App + secrets ArgoCD applications
+├── infra-app-of-apps.yaml            # Bootstrap: deploys all infra apps
+├── infra-apps/                       # Individual infra app manifests
+│   ├── applicationset.yaml
+│   ├── cert-manager.yaml
+│   ├── certificate.yaml
+│   ├── cluster-issuer.yaml
+│   ├── efk-stack.yaml
+│   ├── ingress-controller.yaml
+│   ├── kps.yaml                      # kube-prometheus-stack
+│   ├── sealed-secrets-app.yaml
+│   └── logging/
+├── infra-apps-values/                # Helm values for infra apps
+└── horsing-around-umbrella/          # Application umbrella chart
+    ├── Chart.yaml
+    ├── values.yaml
+    ├── sealed-mongodb-secret.yaml
+    └── charts/
+        ├── horsing-around/           # App Helm chart
+        └── mongodb/                  # MongoDB Helm chart
+```
 
-## Features
+## Secrets Management
 
-- GitOps-based deployment using ArgoCD
-- Automated SSL/TLS certificate management with cert-manager
-- MongoDB Replica Set for high availability
-- Ingress configuration for external access
-- Monitoring with Prometheus and Grafana
-- Logging with EFK Stack
-- Secrets management using SealedSecrets
+MongoDB credentials are managed using Bitnami SealedSecrets:
+- Secrets are encrypted with the cluster's sealing key
+- Encrypted secrets are safe to store in Git
+- Only the cluster can decrypt them
 
 ## Prerequisites
 
-- Kubernetes cluster (EKS)
-- ArgoCD installed on the cluster
-- Helm 3
-- kubectl
+- EKS cluster deployed via [HA-infrastructure](https://github.com/CarmitHaas/HA-infrastructure)
+- ArgoCD installed (handled by the infrastructure Terraform)
+- ECR repository with the application image
+
+## Configuration
+
+Before deploying, update `horsing-around-umbrella/values.yaml`:
+- Set `deployment.image.repository` to your ECR URL
+- Set `ingress.hosts` to your domain
 
 ## Deployment
 
-1. Install ArgoCD in your cluster
-2. Apply the ArgoCD Application manifests:
+ArgoCD is bootstrapped by Terraform. The bootstrap application points to this repo and syncs automatically. To manually apply:
 
 ```bash
-kubectl apply -f horsing-around-app.yaml
-kubectl apply -f horsing-around-secrets-app.yaml
-kubectl apply -f infra-apps-app.yaml
+kubectl apply -f infra-app-of-apps.yaml
+kubectl apply -f horsing-around-argocd-app.yaml
 ```
 
-ArgoCD will automatically sync and deploy the applications based on the configuration in this repository.
+## Monitoring
 
-## Accessing the Application
+![Grafana Dashboard](grafana-dashboard.png)
 
-Once deployed, you can access the Horsing Around application at:
+## Accessing Services
 
-https://horsing-around.zapto.org
+```bash
+# Grafana
+kubectl port-forward svc/kube-prometheus-stack-grafana 8080:80
 
-## Monitoring and Logging
+# Kibana
+kubectl port-forward svc/efk-stack-kibana 15601:5601 -n logging
 
-- Grafana: kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090
-           kubectl port-forward svc/kube-prometheus-stack-grafana  8080:80
-- Kibana:  kubectl port-forward svc/efk-stack-kibana 15601:5601 -n logging
-
-
-## Contributing
-
-Feel free to fork this repository and submit pull requests to contribute to this project.
+# Prometheus
+kubectl port-forward svc/kube-prometheus-stack-prometheus 9090:9090
+```
